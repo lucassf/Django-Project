@@ -16,7 +16,7 @@ class IndexView(generic.ListView):
 
 
 def owner(request):
-    return HttpResponse("Hello, world. 5da04d67 is the polls owner.")
+    return HttpResponse("Hello, world. 0801f1b5 is the polls owner.")
 
 
 class DetailView(generic.DetailView):

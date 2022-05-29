@@ -1,0 +1,36 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+
+<head>
+    <meta name="dj4e" content="0801f1b5e77c751f6698851220bb1405">
+</head>
+
+<body>
+    <h1>Autos List</h1>
+    {% if auto_list|length > 0 %}
+    <ul>
+        {% for auto in auto_list %}
+            <li>
+                {{ auto.nickname }} ({{ auto.make.name }})
+                (<a href="{% url 'autos:auto_update' auto.id %}">Update</a>
+                | <a href="{% url 'autos:auto_delete' auto.id %}">Delete</a>)
+            </li>
+            <p></p>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>There are no autos in the library.</p>
+    {% endif %}
+    {% if make_count > 0 %}
+        <p><a href="{% url 'autos:auto_create' %}">Add an auto</a></p>
+    {% else %}
+        <p>Please add a make before you add an auto.</p>
+    {% endif %}
+    <p>
+        <a href="{% url 'autos:make_list' %}">View makes</a> ({{ make_count }}) |
+        <a href="{% url 'autos:make_create' %}">Add a make</a>
+    </p>
+</body>
+
+{% endblock %}

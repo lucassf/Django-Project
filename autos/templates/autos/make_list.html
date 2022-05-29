@@ -1,0 +1,27 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+
+<head>
+    <meta name="dj4e" content="0801f1b5e77c751f6698851220bb1405">
+</head>
+<body>
+    <h1>Makes List</h1>
+    {% if make_list|length > 0%}
+    <ul>
+        {% for make in make_list %}
+            <li>
+                {{ make.name }}
+                (<a href="{% url 'autos:make_update' make.id %}">Update</a>
+                | <a href="{% url 'autos:make_delete' make.id %}">Delete</a>)
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>There are no makes in the library.</p>
+    {% endif %}
+    <p><a href="{% url 'autos:make_create' %}">Add a make</a></p>
+    <p><a href="{% url 'autos:all' %}">Back to autos</a></p>
+</body>
+
+{% endblock %}
