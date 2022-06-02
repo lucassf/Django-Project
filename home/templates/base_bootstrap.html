@@ -4,10 +4,14 @@
 <!-- Edit dj4e-samples/settings.py and add APP_NAME = 'DJ4E Samples' or similar -->
 <title>{% block title %}{{ settings.APP_NAME }}{% endblock %}</title>
 
+{% load static %}
+
 <!-- Replace this value (42-42) with the one provided by the autograder -->
 <meta name="dj4e" content="0801f1b5e77c751f6698851220bb1405">
 
-<meta name="dj4e-code" content="42165382768746">
+<meta name="dj4e-code" content="42165400669866">
+
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
 <link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
