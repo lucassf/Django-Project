@@ -6,7 +6,7 @@
     {% csrf_token %}
     <h1>Delete Ad</h1>
     <p>Are you sure you want to delete the ad {{ ad.title }}?</p>
-    <input type="submit" value="Delete">
+    <input type="submit" value="Yes, delete">
     <input type="submit" onClick="window.location=`{% url 'ads:all' %}` ; return false;" value="Cancel">
 </form>
 
