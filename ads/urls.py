@@ -1,4 +1,5 @@
-from django.urls import path, reverse_lazy
+from django.urls import path
+from django.urls import reverse_lazy
 
 from . import views
 
@@ -9,4 +10,9 @@ urlpatterns = [
     path('ad/create', views.AdCreateView.as_view(), name='ad_create'),
     path('ad/<int:pk>/update', views.AdUpdateView.as_view(), name='ad_update'),
     path('ad/<int:pk>/delete', views.AdDeleteView.as_view(), name='ad_delete'),
+    path('ad_picture/<int:pk>', views.stream_file, name='ad_picture'),
+    path('ad/<int:pk>/comment',
+         views.CommentCreateView.as_view(), name='ad_comment_create'),
+    path('comment/<int:pk>/delete',
+         views.CommentDeleteView.as_view(success_url=reverse_lazy('ads')), name='ad_comment_delete'),
 ]
