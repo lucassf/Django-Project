@@ -1,18 +1,33 @@
 from django.views.generic import ListView, DetailView
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.decorators import method_decorator
+from django.db.utils import IntegrityError
 
-from ads.models import Ad, Comment
+from ads.models import Ad, Comment, Favorite
 from ads.owner import OwnerDeleteView
 from ads.forms import CreateForm, CommentForm
 
 
 class AdListView(ListView):
     model = Ad
+    template_name = 'ads/ad_list.html'
     context_object_name = 'ad_list'
+
+    def get(self, request):
+        ads = Ad.objects.all()
+        favorites = []
+        if request.user.is_authenticated:
+            rows = request.user.favorite_ads.values('id')
+            favorites = [row['id'] for row in rows]
+        return render(request, self.template_name, {
+            self.context_object_name: ads,
+            'favorites': favorites
+        })
 
 
 class AdDetailView(DetailView):
@@ -105,3 +120,27 @@ class CommentDeleteView(OwnerDeleteView):
     def get_success_url(self):
         ad = self.object.ad
         return reverse('ads:ad_detail', args=[ad.id])
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        ad = get_object_or_404(Ad, id=pk)
+        fav = Favorite(user=request.user, ad=ad)
+        try:
+            fav.save()
+        except IntegrityError:
+            pass
+        return HttpResponse()
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        print("Delete PK", pk)
+        ad = get_object_or_404(Ad, id=pk)
+        try:
+            Favorite.objects.get(user=request.user, ad=ad).delete()
+        except Favorite.DoesNotExist:
+            pass
+        return HttpResponse()

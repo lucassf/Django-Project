@@ -14,6 +14,8 @@ class Ad(models.Model):
     picture = models.BinaryField(null=True, editable=True)
     content_type = models.CharField(
         max_length=256, null=True, help_text='The MIMEType of the file')
+    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Favorite', related_name='favorite_ads')
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -21,6 +23,17 @@ class Ad(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Favorite(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('ad', 'user')
+
+    def __str__(self):
+        return f'{self.user.username} favorited {self.ad.title}'
 
 
 class Comment(models.Model):
