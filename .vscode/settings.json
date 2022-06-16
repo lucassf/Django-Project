@@ -10,5 +10,8 @@
         "--max-line-length=120",
         "--ignore=W504,W503"
     ],
-    "workbench.editor.enablePreview": false
+    "workbench.editor.enablePreview": false,
+    "[django-html]": {
+        "editor.defaultFormatter": "monosans.djlint",
+    },
 }

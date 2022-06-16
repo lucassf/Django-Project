@@ -15,8 +15,7 @@ Including another URLconf
 """
 import os
 from django.contrib import admin
-from django.urls import include, path
-from django.conf.urls import url
+from django.urls import include, path, re_path
 from django.views.static import serve
 from django.views.generic import TemplateView
 
@@ -33,8 +32,8 @@ urlpatterns = [
     path('cats/', include('cats.urls')),
     path('ads/', include('ads.urls')),
     path('admin/', admin.site.urls),
-    url(r'^site/(?P<path>.*)$', serve,
-        {'document_root': SITE_ROOT, 'show_indexes': True},
-        name='site_path'
-        ),
+    re_path(r'^site/(?P<path>.*)$', serve,
+            {'document_root': SITE_ROOT, 'show_indexes': True},
+            name='site_path'
+            ),
 ]

@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
+from django.db.models import Q
 
 from ads.models import Ad, Comment, Favorite
 from ads.owner import OwnerDeleteView
@@ -19,14 +20,21 @@ class AdListView(ListView):
     context_object_name = 'ad_list'
 
     def get(self, request):
-        ads = Ad.objects.all()
+        search_str = request.GET.get("search", False)
+        if search_str:
+            query = Q(title__icontains=search_str)
+            query.add(Q(text__icontains=search_str), Q.OR)
+            ads = Ad.objects.filter(query).select_related().order_by('-updated_at')
+        else:
+            ads = Ad.objects.all().order_by('-updated_at')
         favorites = []
         if request.user.is_authenticated:
             rows = request.user.favorite_ads.values('id')
             favorites = [row['id'] for row in rows]
         return render(request, self.template_name, {
             self.context_object_name: ads,
-            'favorites': favorites
+            'favorites': favorites,
+            'search_str': search_str
         })
 
 
